@@ -1,6 +1,5 @@
 package io.nology.eventscreatorbackend.label;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -38,6 +37,8 @@ public class EventLabel {
 	@Getter
 	@Setter
 	private String name;
+
+	// relationship with users
 	
 	@Getter
 	@Setter

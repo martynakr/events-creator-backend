@@ -1,7 +1,6 @@
 package io.nology.eventscreatorbackend.event;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import io.nology.eventscreatorbackend.label.EventLabelCreateDTO;

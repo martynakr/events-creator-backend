@@ -1,6 +1,9 @@
 package io.nology.eventscreatorbackend.exceptions;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +12,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import io.jsonwebtoken.ExpiredJwtException;
 
@@ -36,10 +40,15 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<String> handleInvalidData(MethodArgumentNotValidException ex) {
-		System.out.println("invalid argument handler");
-		return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+	public Map<String, Object> handleInvalidData(MethodArgumentNotValidException ex) {
+		Map<String, Object> errorMap = new HashMap<>();
+		errorMap.put("timestamp", LocalDateTime.now());
+	    errorMap.put("status", HttpStatus.BAD_REQUEST.value());
+	    errorMap.put("error", "Bad Request");
+        errorMap.put("message", ex.getMessage());
+        return errorMap;
 	}
 	
 	//JSONParseError

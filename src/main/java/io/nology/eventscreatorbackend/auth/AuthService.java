@@ -1,10 +1,12 @@
 package io.nology.eventscreatorbackend.auth;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -58,5 +60,22 @@ public class AuthService {
 				() -> new NotFoundException("Incorrect login details"));
 		String token = jwtService.generateToken(user);
 		return AuthResponse.builder().token(token).build();
+	}
+	
+	public User getCurrentUser() {
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		
+		String email = auth.getName();
+		
+		Optional<User> loggedInUser = 
+				this.userRepository.findByEmail(email);
+		
+		if(loggedInUser == null) {
+			// throw error? shoudln't really happen
+			return null;
+		}
+		
+		return loggedInUser.get();
 	}
 }
