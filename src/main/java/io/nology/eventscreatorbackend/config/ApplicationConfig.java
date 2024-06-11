@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.nology.eventscreatorbackend.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -21,8 +22,13 @@ public class ApplicationConfig {
 	private final UserRepository repository;
 	
 	@Bean
+	public Dotenv dotenv() {
+		return Dotenv.configure().load();
+	}
+	
+	@Bean
 	public UserDetailsService userDetailsService() {
-			return username -> repository.findByEmail(username)
+			return email -> repository.findByEmail(email)
 			        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 	}
 	

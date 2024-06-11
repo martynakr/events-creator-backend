@@ -9,8 +9,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-
 import io.nology.eventscreatorbackend.event.Event;
 import io.nology.eventscreatorbackend.event.EventRepository;
 import io.nology.eventscreatorbackend.label.EventLabel;
@@ -42,24 +40,27 @@ public class DataBaseSeeder implements CommandLineRunner {
 	
 	private void seedData() {
 		
-		EventLabel label = new EventLabel();
-		label.setName("work");
-		
-		EventLabel label2 = new EventLabel();
-		label2.setName("sport");
-		
-		EventLabel label3 = new EventLabel();
-		label3.setName("family time");
-
-		ArrayList<EventLabel> allLabels = new ArrayList<>(Arrays.asList(label, label2, label3));
-		allLabels.forEach(l -> this.labelRepository.save(l));
-		
-		
 		User user1 = new User("John", "Doe", "john@email.com", passwordEncoder.encode("pass"));
 		User user2 = new User("Jane", "Smith", "jane@email.com", passwordEncoder.encode("pass"));
 		
 		ArrayList<User> allUsers = new ArrayList<>(Arrays.asList(user1, user2));
 		allUsers.forEach(u -> this.userRepository.save(u));
+
+		EventLabel label = new EventLabel();
+		label.setName("work");
+		label.setCreatedBy(user2);
+		
+		EventLabel label2 = new EventLabel();
+		label2.setName("sport");
+		label2.setCreatedBy(user2);
+		
+		EventLabel label3 = new EventLabel();
+		label3.setName("family time");
+		label3.setCreatedBy(user1);
+
+		ArrayList<EventLabel> allLabels = new ArrayList<>(Arrays.asList(label, label2, label3));
+		allLabels.forEach(l -> this.labelRepository.save(l));
+		
 		
 		Event event1 = Event.builder()
 				.name("Yoga in the park")

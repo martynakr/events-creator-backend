@@ -9,8 +9,6 @@ import org.springframework.security.config.annotation.web.configurers.CsrfConfig
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -28,9 +26,17 @@ public class SecurityConfiguration {
 		.csrf(CsrfConfigurer::disable)
 		.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers("/auth/register")
-				.permitAll()
-				.requestMatchers("/auth/login")
-				.permitAll()
+    			.permitAll()
+    			.requestMatchers("/auth/login")
+    			.permitAll()
+    			.requestMatchers("/v2/api-docs/**")
+    			.permitAll()
+    			.requestMatchers("/swagger-ui/**")
+    			.permitAll()
+    			.requestMatchers("/swagger-resources/**")
+    			.permitAll()
+    			.requestMatchers("/v3/api-docs/**")
+    			.permitAll()
 				.anyRequest().authenticated())
 		 .sessionManagement(session -> session
 	                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

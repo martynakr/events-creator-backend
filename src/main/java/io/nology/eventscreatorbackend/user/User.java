@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import io.nology.eventscreatorbackend.event.Event;
+import io.nology.eventscreatorbackend.label.EventLabel;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -72,6 +73,9 @@ public class User implements UserDetails {
 	
 	@OneToMany(mappedBy="user")
 	private List<Event> events = new ArrayList<>();
+
+	@OneToMany(mappedBy = "createdBy")
+	private List<EventLabel> labels = new ArrayList<>();
 	
 	public User() {}
 	
