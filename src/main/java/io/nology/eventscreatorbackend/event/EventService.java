@@ -32,7 +32,7 @@ public class EventService {
 	private ModelMapper modelMapper;
 	
 	public Event create(EventCreateDTO data) {
-		
+		System.out.println(data.getName() + "DATA NAME FROM SERVICE");
 		// get logged in user and assign to event
 		User loggedInUser = this.authService.getCurrentUser();
 		
@@ -75,10 +75,10 @@ public class EventService {
 			throw new NotFoundException("Event with id: " + id + " not found");
 		}
 
-		Event exisitngEvent = foundEvent.get();
-		modelMapper.map(data, exisitngEvent);
+		Event existingEvent = foundEvent.get();
+		modelMapper.map(data, existingEvent);
 
-		return this.repository.save(exisitngEvent);
+		return this.repository.save(existingEvent);
 		
 	}
 

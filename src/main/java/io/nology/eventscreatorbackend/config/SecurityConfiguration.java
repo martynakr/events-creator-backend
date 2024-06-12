@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configurers.CsrfConfig
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,14 +18,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 	
-	 private final JwtAuthenticationFilter jwtAuthFilter;
-	 private final AuthenticationProvider authenticationProvider;
-	 private final CustomAuthEntryPoint customAuthEntryPoint;
+	private final JwtAuthenticationFilter jwtAuthFilter;
+	private final AuthenticationProvider authenticationProvider;
+	private final CustomAuthEntryPoint customAuthEntryPoint;
+	private final CorsConfigurationSource corsConfigurationSource;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 		.csrf(CsrfConfigurer::disable)
+		.cors(c -> c.configurationSource(corsConfigurationSource))
 		.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers("/auth/register")
 				.permitAll()
