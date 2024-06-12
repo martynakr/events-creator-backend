@@ -38,13 +38,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			// final String authHeader = request.getHeader("Authorization");
 
 			// change to array of strings to allow swagger as well
-			System.out.println("INSIDE JWT FILTER");
-			  if (requestURI.equals("/auth/login") || requestURI.equals("/auth/register")) {
-        		filterChain.doFilter(request, response);
+		
+			if (requestURI.equals("/auth/login") || requestURI.equals("/auth/register")) {
+        	filterChain.doFilter(request, response);
         		return;
-    }
+    		}
+			
 			final String jwt = getCookieValue(request, "jwt");
-			System.out.println(jwt + " JWT");
+			System.out.println(jwt + " JWT FROM FILTER");
 			final Long userId;
 
 			
@@ -57,8 +58,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             	filterChain.doFilter(request, response);
             	return;
         	}
-			;
+			
 			userId = jwtService.extractUserId(jwt);
+			System.out.println(userId + " USER ID FROM FILTER!!!!!!!!!!!");
+			
 			
 			// IF USER is in db and is not authenticated
 			if(userId != null && SecurityContextHolder
@@ -84,9 +87,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	    private String getCookieValue(HttpServletRequest request, String cookieName) {
         Cookie[] cookies = request.getCookies();
+		System.out.println(cookies != null);
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(cookieName)) {
+					System.out.println(cookie.getValue() + " COOKIE VALUE");
                     return cookie.getValue();
                 }
             }
