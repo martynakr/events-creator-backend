@@ -62,15 +62,15 @@ public class ApplicationConfig {
 
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-    configuration.setAllowedMethods(Arrays.asList("GET","POST"));
-    configuration.setAllowedHeaders(Arrays.asList("*"));
-	configuration.setAllowCredentials(true);
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-    return source;
-}
+    	CorsConfiguration configuration = new CorsConfiguration();
+    	configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+    	configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+    	configuration.setAllowedHeaders(Arrays.asList("*"));
+		configuration.setAllowCredentials(true);
+    	UrlBasedCorsConfigurationSource source = new 			UrlBasedCorsConfigurationSource();
+    	source.registerCorsConfiguration("/**", configuration);
+    	return source;
+	}
 	
 
 }

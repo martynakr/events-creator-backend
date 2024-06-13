@@ -19,10 +19,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 	
-	 private final JwtAuthenticationFilter jwtAuthFilter;
-	 private final AuthenticationProvider authenticationProvider;
-	 private final CustomAuthEntryPoint customAuthEntryPoint;
-	  private final CorsConfigurationSource corsConfigurationSource;
+	private final JwtAuthenticationFilter jwtAuthFilter;
+	private final AuthenticationProvider authenticationProvider;
+	private final CustomAuthEntryPoint customAuthEntryPoint;
+	private final CorsConfigurationSource corsConfigurationSource;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

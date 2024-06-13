@@ -46,7 +46,7 @@ public class AuthController {
         .httpOnly(true)
         .secure(true)
         .maxAge(3600)
-        .path("/auth")
+        .path("/")
         .build();
 
 		System.out.println(cookie.toString() + " COOOOOKIE");
