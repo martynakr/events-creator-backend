@@ -75,10 +75,10 @@ public class EventService {
 			throw new NotFoundException("Event with id: " + id + " not found");
 		}
 
-		Event exisitngEvent = foundEvent.get();
-		modelMapper.map(data, exisitngEvent);
+		Event existingEvent = foundEvent.get();
+		modelMapper.map(data, existingEvent);
 
-		return this.repository.save(exisitngEvent);
+		return this.repository.save(existingEvent);
 		
 	}
 

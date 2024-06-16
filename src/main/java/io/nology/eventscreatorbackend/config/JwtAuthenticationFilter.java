@@ -4,18 +4,20 @@ import java.io.IOException;
 
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import io.nology.eventscreatorbackend.user.User;
+import io.nology.eventscreatorbackend.user.UserService;
+
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -23,7 +25,8 @@ import lombok.RequiredArgsConstructor;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	
 	private final JwtService jwtService;
-	private final UserDetailsService userDetailsService;
+	private final UserService userService;
+
 
 	@Override
 	protected void doFilterInternal(
@@ -31,30 +34,45 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			@NonNull HttpServletResponse response, 
 			@NonNull FilterChain filterChain
 			) throws ServletException, IOException {
+		String requestURI = request.getRequestURI();
+			// final String authHeader = request.getHeader("Authorization");
+
+			// change to array of strings to allow swagger as well
 		
-			final String authHeader = request.getHeader("Authorization");
-			final String jwt;
-			final String userEmail;
-			System.out.println(authHeader + " auth header");
+			if (requestURI.equals("/auth/login") || requestURI.equals("/auth/register")) {
+        	filterChain.doFilter(request, response);
+        		return;
+    		}
 			
-			if(authHeader == null || !authHeader.startsWith("Bearer ")) {
-				filterChain.doFilter(request, response);
-				return;
-			}
-			jwt = authHeader.substring(7);
-			userEmail = jwtService.extractUsername(jwt);
+			final String jwt = getCookieValue(request, "jwt");
+			System.out.println(jwt + " JWT FROM FILTER");
+			final Long userId;
+
+			
+			// if(authHeader == null || !authHeader.startsWith("Bearer ")) {
+			// 	filterChain.doFilter(request, response);
+			// 	return;
+			// }
+			// jwt = authHeader.substring(7);
+			if (jwt == null) {
+            	filterChain.doFilter(request, response);
+            	return;
+        	}
+			
+			userId = jwtService.extractUserId(jwt);
+			System.out.println(userId + " USER ID FROM FILTER!!!!!!!!!!!");
+			
 			
 			// IF USER is in db and is not authenticated
-			if(userEmail != null && SecurityContextHolder
+			if(userId != null && SecurityContextHolder
 					.getContext().getAuthentication() == null) {
-				UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+				User user = this.userService.getById(userId);
 				
-				System.out.println();
-				if(jwtService.isTokenValid(jwt, userDetails)) {
+				if(jwtService.isTokenValid(jwt, user)) {
 					UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-				            userDetails,
+				            user,
 				            null,
-				            userDetails.getAuthorities()
+				            user.getAuthorities()
 				        );
 				        authToken.setDetails(
 				            new WebAuthenticationDetailsSource().buildDetails(request)
@@ -66,5 +84,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			}
 			filterChain.doFilter(request, response);
 	}
+
+	    private String getCookieValue(HttpServletRequest request, String cookieName) {
+        Cookie[] cookies = request.getCookies();
+		System.out.println(cookies != null);
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(cookieName)) {
+					System.out.println(cookie.getValue() + " COOKIE VALUE");
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
+    }
+
 
 }
