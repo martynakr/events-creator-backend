@@ -3,6 +3,8 @@ package io.nology.eventscreatorbackend.event;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Id;
 import io.nology.eventscreatorbackend.label.EventLabel;
 import io.nology.eventscreatorbackend.user.User;
@@ -58,6 +60,7 @@ public class Event {
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
+	@JsonIgnore()
 	User user;
 	
 }

@@ -1,8 +1,11 @@
 package io.nology.eventscreatorbackend.seeder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -37,6 +40,20 @@ public class DataBaseSeeder implements CommandLineRunner {
 	            seedData();
 	        }
 	}
+
+	private String getRandomColor() {
+        Random random = new Random();
+
+        int hue = random.nextInt(360);
+
+        int saturation = random.nextInt(30) + 70;
+
+        int lightness = random.nextInt(20) + 70;
+
+        String color = String.format("hsl(%d, %d%%, %d%%)", hue, saturation, lightness);
+
+        return color;
+    }
 	
 	private void seedData() {
 		
@@ -48,14 +65,17 @@ public class DataBaseSeeder implements CommandLineRunner {
 
 		EventLabel label = new EventLabel();
 		label.setName("work");
+		label.setColour(getRandomColor());
 		label.setCreatedBy(user2);
 		
 		EventLabel label2 = new EventLabel();
 		label2.setName("sport");
+		label2.setColour(getRandomColor());
 		label2.setCreatedBy(user2);
 		
 		EventLabel label3 = new EventLabel();
 		label3.setName("family time");
+		label3.setColour(getRandomColor());
 		label3.setCreatedBy(user1);
 
 		ArrayList<EventLabel> allLabels = new ArrayList<>(Arrays.asList(label, label2, label3));
@@ -72,8 +92,8 @@ public class DataBaseSeeder implements CommandLineRunner {
 		
 		Event event2 = Event.builder()
 				.name("10km run")
-				.startDate(LocalDateTime.of(2023, 10, 07, 10, 30))
-				.endDate(LocalDateTime.of(2023, 10, 07, 12, 30))
+				.startDate(LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.of(10, 30)))
+				.endDate(LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.of(12, 30)))
 				.labels(allLabels)
 				.user(user1)
 				.build();

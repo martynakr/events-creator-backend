@@ -42,6 +42,11 @@ public class EventLabel {
 	@Setter
 	private String name;
 
+	@Column(nullable = false)
+	@Getter
+	@Setter
+	private String colour;
+
 	@Getter
 	@Setter
 	@JsonIgnore
@@ -56,5 +61,5 @@ public class EventLabel {
 	@ManyToMany(mappedBy = "labels")
 	private List<Event> events;
 
-	// add label colour
+
 }

@@ -40,7 +40,6 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@Valid @RequestBody AuthLoginDTO data) {
 		AuthResponse jwt = this.service.login(data);
-		System.out.println(jwt.getToken() + " TOOOKEEEN");
 
 		ResponseCookie cookie = ResponseCookie.from("jwt", jwt.getToken())
         .httpOnly(true)
@@ -49,7 +48,6 @@ public class AuthController {
         .path("/")
         .build();
 
-		System.out.println(cookie.toString() + " COOOOOKIE");
 		return ResponseEntity.ok()
         .header(HttpHeaders.SET_COOKIE, cookie.toString())
         .body("Login successful");
