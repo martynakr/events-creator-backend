@@ -25,15 +25,15 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<String>(ex.getMessage(), HttpStatus.NOT_FOUND);
 	}
 	
-	@ExceptionHandler(BadCredentialsException.class)
-	public ResponseEntity<String> handleBadCredentials(BadCredentialsException ex) {
-		return new ResponseEntity<String>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
-	}
+	// @ExceptionHandler(BadCredentialsException.class)
+	// public ResponseEntity<String> handleBadCredentials(BadCredentialsException ex) {
+	// 	return new ResponseEntity<String>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+	// }
 	
-	@ExceptionHandler(ExpiredJwtException.class)
-	public ResponseEntity<String> handleExpiredToken(ExpiredJwtException ex) {
-		return new ResponseEntity<String>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
-	}
+	// @ExceptionHandler(ExpiredJwtException.class)
+	// public ResponseEntity<String> handleExpiredToken(ExpiredJwtException ex) {
+	// 	return new ResponseEntity<String>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+	// }
 	
 	@ExceptionHandler(DateTimeParseException.class)
 	public ResponseEntity<String> handleIncorrectDate(DateTimeParseException ex) {

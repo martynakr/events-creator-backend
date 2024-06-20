@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 import io.nology.eventscreatorbackend.auth.AuthService;
 import io.nology.eventscreatorbackend.exceptions.NotFoundException;
-import io.nology.eventscreatorbackend.label.EventLabel;
-import io.nology.eventscreatorbackend.label.EventLabelService;
+import io.nology.eventscreatorbackend.label.Label;
+import io.nology.eventscreatorbackend.label.LabelService;
 import io.nology.eventscreatorbackend.user.User;
 import jakarta.transaction.Transactional;
 
@@ -23,7 +23,7 @@ public class EventService {
 	private EventRepository repository;
 	
 	@Autowired
-	private EventLabelService labelService;
+	private LabelService labelService;
 	
 	@Autowired
 	private AuthService authService;
@@ -41,23 +41,23 @@ public class EventService {
 				.startDate(data.getStartDate())
 				.endDate(data.getEndDate())
 				.user(loggedInUser)
-				.labels(new ArrayList<EventLabel>())
+				.labels(new ArrayList<Label>())
 				.build();
 		
-		if(data.getLabels() != null ) {
-			data.getLabels().forEach(l -> {
-				Optional<EventLabel> maybeLabel = this.labelService.findByName(l.getName());
-				if(maybeLabel.isPresent()) {
-					newEvent.getLabels().add(maybeLabel.get());
-				} else {
-					EventLabel newLabel = this.labelService.create(l);
-					newEvent.getLabels().add(newLabel);
-				}
+		// if(data.getLabels() != null ) {
+		// 	data.getLabels().forEach(l -> {
+		// 		Optional<EventLabel> maybeLabel = this.labelService.findByName(l.getName());
+		// 		if(maybeLabel.isPresent()) {
+		// 			newEvent.getLabels().add(maybeLabel.get());
+		// 		} else {
+		// 			EventLabel newLabel = this.labelService.create(l);
+		// 			newEvent.getLabels().add(newLabel);
+		// 		}
 				
-			}
-		  );
+		// 	}
+		//   );
 			
-		}
+		// }
 		return this.repository.save(newEvent);
 	}
 	

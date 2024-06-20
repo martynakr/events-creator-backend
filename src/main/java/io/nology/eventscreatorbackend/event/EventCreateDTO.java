@@ -3,7 +3,7 @@ package io.nology.eventscreatorbackend.event;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import io.nology.eventscreatorbackend.label.EventLabelCreateDTO;
+import io.nology.eventscreatorbackend.label.LabelCreateDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -29,5 +29,5 @@ public class EventCreateDTO {
 	
 	@Getter
 	@Setter
-	List<@Valid EventLabelCreateDTO> labels = null;
+	List<@Valid LabelCreateDTO> labels = null;
 }

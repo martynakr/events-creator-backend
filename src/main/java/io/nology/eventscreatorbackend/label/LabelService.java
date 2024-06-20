@@ -15,36 +15,36 @@ import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
-public class EventLabelService {
+public class LabelService {
 
 	@Autowired
-	private EventLabelRepository labelRepository;
+	private LabelRepository labelRepository;
 
 	@Autowired
 	private AuthService authService;
 	
-	public List<EventLabel> findAll() {
+	public List<Label> findAll() {
 
 		User loggedInUser = this.authService.getCurrentUser();
 		return this.labelRepository.findByCreatedBy(loggedInUser);
 	}
 	
-	public Optional<EventLabel> findByName(String name) {
+	public Optional<Label> findByName(String name) {
 		User loggedInUser = this.authService.getCurrentUser();
 		return this.labelRepository.findByNameAndCreatedBy(name, loggedInUser);
 	}
 	
-	public EventLabel create(EventLabelCreateDTO data) {
+	public Label create(LabelCreateDTO data) {
 
 		User loggedInUser = this.authService.getCurrentUser();
 
-		Optional<EventLabel> foundLabel = this.labelRepository.findByNameAndCreatedBy(data.getName(), loggedInUser);
+		Optional<Label> foundLabel = this.labelRepository.findByNameAndCreatedBy(data.getName(), loggedInUser);
 
 		if(foundLabel.isPresent()) {
 			return foundLabel.get();
 		}
 
-		EventLabel newLabel = EventLabel.builder().name(data.getName()).colour(this.getRandomColor()).build();
+		Label newLabel = Label.builder().name(data.getName()).colour(this.getRandomColor()).build();
 		return this.labelRepository.save(newLabel);
 	}
 

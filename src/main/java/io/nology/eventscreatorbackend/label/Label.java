@@ -23,14 +23,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "labels")
-public class EventLabel {
+public class Label {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

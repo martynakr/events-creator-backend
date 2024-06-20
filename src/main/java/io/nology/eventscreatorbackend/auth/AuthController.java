@@ -48,8 +48,24 @@ public class AuthController {
         .path("/")
         .build();
 
-		return ResponseEntity.ok()
+		return ResponseEntity.noContent()
         .header(HttpHeaders.SET_COOKIE, cookie.toString())
-        .body("Login successful");
+        .build();
 	}
+
+	@PostMapping("/logout")
+	public ResponseEntity<String> logout() {
+
+		ResponseCookie cookie = ResponseCookie.from("jwt", null)
+        .httpOnly(true)
+        .secure(true)
+        .maxAge(3600)
+        .path("/")
+        .build();
+		
+		return ResponseEntity.noContent()
+        .header(HttpHeaders.SET_COOKIE, cookie.toString())
+        .build();
+	}
+	
 }

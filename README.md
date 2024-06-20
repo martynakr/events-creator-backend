@@ -56,9 +56,10 @@ or
 
 5. If you don't wish to seed the database, you can just run the application with the following command:
 
-````bash
+```bash
 mvn spring-boot:run
 ```
+
 ## Available Endpoints
 
 -   `POST /auth/register` - allows a new user to create an account, example payload:
@@ -70,7 +71,7 @@ mvn spring-boot:run
     "email": "martyna@email.com",
     "password": "password"
 }
-````
+```
 
 -   `POST /auth/login` - allows an already existing user to access their resources, example payload:
 
@@ -126,6 +127,16 @@ Coming soon
 
 -   **16 June 2024** - Updating the logic for creating a label - check if a label with such name exists for the logged-in user, only if it doesn't - create it. Added a colour property to the label entity - so a consistent background colour can be displayed on the frontend. Updated the seeder to include the colour property.
 
+-   **18 June 20204** - Implemented logout endpoint
+
+-   **19 June 2024** - Solved the issue of every error resulting in 401 by adding
+
+```java
+				.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
+```
+
+to SecurityConfig class
+
 ## Known issues
 
 -   Because the JWT is sent as a cookie, the whole full stack application is vulnerable to CSRF attacks. A potential solution to this could be using the Signed Double-Submit Cookie Pattern
@@ -136,6 +147,5 @@ Coming soon
 -   Add logic to ensure only unique colours for labels get generated
 -   Adding tests using Mocktio
 -   Setting up automated tests on push to branches with Github Actions
--   Adding a logout route
 -   Deploying the backend on Render as per [instructions I created earlier](https://github.com/martynakr/spring-boot-postgres-render-deployment)
 -   Setting up continuous deployment

@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 import io.nology.eventscreatorbackend.event.Event;
 import io.nology.eventscreatorbackend.event.EventRepository;
-import io.nology.eventscreatorbackend.label.EventLabel;
-import io.nology.eventscreatorbackend.label.EventLabelRepository;
+import io.nology.eventscreatorbackend.label.Label;
+import io.nology.eventscreatorbackend.label.LabelRepository;
 import io.nology.eventscreatorbackend.user.User;
 import io.nology.eventscreatorbackend.user.UserRepository;
 
@@ -23,7 +23,7 @@ import io.nology.eventscreatorbackend.user.UserRepository;
 public class DataBaseSeeder implements CommandLineRunner {
 	
 	@Autowired
-	private EventLabelRepository labelRepository;
+	private LabelRepository labelRepository;
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -63,22 +63,22 @@ public class DataBaseSeeder implements CommandLineRunner {
 		ArrayList<User> allUsers = new ArrayList<>(Arrays.asList(user1, user2));
 		allUsers.forEach(u -> this.userRepository.save(u));
 
-		EventLabel label = new EventLabel();
+		Label label = new Label();
 		label.setName("work");
 		label.setColour(getRandomColor());
 		label.setCreatedBy(user2);
 		
-		EventLabel label2 = new EventLabel();
+		Label label2 = new Label();
 		label2.setName("sport");
 		label2.setColour(getRandomColor());
 		label2.setCreatedBy(user2);
 		
-		EventLabel label3 = new EventLabel();
+		Label label3 = new Label();
 		label3.setName("family time");
 		label3.setColour(getRandomColor());
 		label3.setCreatedBy(user1);
 
-		ArrayList<EventLabel> allLabels = new ArrayList<>(Arrays.asList(label, label2, label3));
+		ArrayList<Label> allLabels = new ArrayList<>(Arrays.asList(label, label2, label3));
 		allLabels.forEach(l -> this.labelRepository.save(l));
 		
 		

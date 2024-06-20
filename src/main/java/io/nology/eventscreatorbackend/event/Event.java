@@ -6,7 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Id;
-import io.nology.eventscreatorbackend.label.EventLabel;
+import io.nology.eventscreatorbackend.label.Label;
 import io.nology.eventscreatorbackend.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -56,7 +56,7 @@ public class Event {
 	@JoinTable(name = "event_labels",
 		joinColumns = @JoinColumn(name = "event_id"),
 		inverseJoinColumns = @JoinColumn(name = "label_id"))
-	List<EventLabel> labels;
+	List<Label> labels;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")

@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
-public class EventLabelCreateDTO {
+public class LabelCreateDTO {
 
 	@NotBlank
 	@Getter
