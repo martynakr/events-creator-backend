@@ -139,6 +139,8 @@ to SecurityConfig class
 
 -   **! July 2024** - added controller tests for `EventController` class. Set up Github Actions workflow to run tests on push to any branch.
 
+[Synchronizer Token Pattern](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern)
+
 ## Known issues
 
 -   Because the JWT is sent as a cookie, the whole full stack application is vulnerable to CSRF attacks. A potential solution to this could be using the Signed Double-Submit Cookie Pattern

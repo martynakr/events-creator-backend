@@ -40,13 +40,15 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@Valid @RequestBody AuthLoginDTO data) {
 		AuthResponse jwt = this.service.login(data);
-
+        System.out.println("LOGGING IN");
 		ResponseCookie cookie = ResponseCookie.from("jwt", jwt.getToken())
         .httpOnly(true)
         .secure(true)
         .maxAge(3600)
         .path("/")
         .build();
+
+        System.out.println(cookie.toString() + " COOKIE STRINGs");
 
 		return ResponseEntity.noContent()
         .header(HttpHeaders.SET_COOKIE, cookie.toString())

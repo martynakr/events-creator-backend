@@ -62,6 +62,7 @@ public class EventControllerTest {
             post("/events")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonEvent)
+                .with(csrf())
         ).andExpect(status().isUnauthorized());
     }
 
@@ -131,6 +132,7 @@ public class EventControllerTest {
             post("/events")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonEvent)
+                .with(csrf())
                 .cookie(new MockCookie("jwt", "testJWT"))
         ).andExpect(status().isCreated())
         .andExpect(jsonPath("name").value("Created event"))
