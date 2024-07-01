@@ -31,10 +31,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-//@Data
-//@Builder
-//@NoArgsConstructor
-//@AllArgsConstructor
+@Data
+@Builder
+@AllArgsConstructor
 @Entity
 @Table(name = "users") 
 @JsonIgnoreProperties({ "accountNonLocked", "accountNonExpired", 

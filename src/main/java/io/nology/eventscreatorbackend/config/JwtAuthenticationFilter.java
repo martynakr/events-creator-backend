@@ -44,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         		return;
     		}
 			
-			final String jwt = getCookieValue(request, "jwt");
+			final String jwt = this.getCookieValue(request, "jwt");
 			System.out.println(jwt + " JWT FROM FILTER");
 			final Long userId;
 
@@ -85,19 +85,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			filterChain.doFilter(request, response);
 	}
 
-	    private String getCookieValue(HttpServletRequest request, String cookieName) {
+	 public String getCookieValue(HttpServletRequest request, String cookieName) {
         Cookie[] cookies = request.getCookies();
 		System.out.println(cookies != null);
         if (cookies != null) {
             for (Cookie cookie : cookies) {
+                System.out.println(cookie.getValue() + " COOKIE VALUE");
                 if (cookie.getName().equals(cookieName)) {
-					System.out.println(cookie.getValue() + " COOKIE VALUE");
+					
                     return cookie.getValue();
                 }
             }
         }
         return null;
     }
-
-
 }

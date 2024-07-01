@@ -1,5 +1,6 @@
 package io.nology.eventscreatorbackend.event;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -8,8 +9,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.security.Key;
 import java.time.LocalDateTime;
@@ -28,13 +27,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockCookie;
 import org.springframework.test.web.servlet.MockMvc;
-
-import io.github.cdimascio.dotenv.Dotenv;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
-
+import io.nology.eventscreatorbackend.config.JwtService;
+import io.nology.eventscreatorbackend.user.Role;
+import io.nology.eventscreatorbackend.user.User;
+import io.nology.eventscreatorbackend.user.UserService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -43,27 +39,14 @@ public class EventControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private Dotenv dotenv;
+    @MockBean
+    private EventService eventService;
 
-    @MockBean private EventService eventService;
+    @MockBean
+    private JwtService jwtService;
 
-      private Key getSingInKey() {
-        String secret = dotenv.get("SECRET_KEY");
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
-
-    private String generateToken() {
-           return Jwts
-                .builder()
-                .setClaims(null)
-                .setSubject("1")
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 3600))
-                .signWith(this.getSingInKey(), SignatureAlgorithm.HS256)
-                .compact();
-    }
+    @MockBean
+    private UserService userService;
 
     @Test
     void shouldRejectCreatingEventWhenNotLoggedIn() throws Exception {
@@ -90,17 +73,68 @@ public class EventControllerTest {
             .startDate(LocalDateTime.now())
             .endDate(LocalDateTime.now().plusDays(1))
             .build();
-        
-        List<Event> existingEvents = new ArrayList();
+
+        User existingUser = User.builder()
+            .firstName("John")
+            .lastName("Smith")
+            .password("pass")
+            .email("john@mail.com")
+            .role(Role.STANDARD_USER)
+            .build();
+
+        List<Event> existingEvents = new ArrayList<Event>();
         existingEvents.add(existingEvent);
         
         when(this.eventService.findAll()).thenReturn(existingEvents);
+        when(this.jwtService.extractUserId(anyString())).thenReturn(1l);
+        when(this.userService.getById(anyLong())).thenReturn(existingUser);
+        when(this.jwtService.isTokenValid(anyString(), any(User.class))).thenReturn(true);
 
         this.mockMvc.perform(
             get("/events")
-                .cookie(new MockCookie("jwt", this.generateToken()))
+                .cookie(new MockCookie("jwt", "testJWT"))
         ).andExpect(status().isOk())
          .andExpect(jsonPath("$[0].name").value("New event"))
          .andExpect(jsonPath("$[0].startDate").exists());
+    }
+
+    @Test
+    void shouldCreateEventWhenValidDataAndUserLoggedIn() throws Exception {
+
+        User existingUser = User.builder()
+            .firstName("John")
+            .lastName("Smith")
+            .password("pass")
+            .email("john@mail.com")
+            .role(Role.STANDARD_USER)
+            .build();
+
+        Event createdEvent = Event.builder()
+            .name("Created event")
+            .startDate(LocalDateTime.now())
+            .endDate(LocalDateTime.now().plusDays(1))
+            .build();
+
+        String jsonEvent = "{"
+            + "\"name\": \"Created event\","
+            + "\"startDate\": \"2024-07-01T10:00:00\","
+            + "\"endDate\": \"2024-07-01T12:00:00\","
+            + "\"labels\": []"
+            + "}";
+
+        when(this.eventService.create(any(EventCreateDTO.class))).thenReturn(createdEvent);
+        when(this.jwtService.extractUserId(anyString())).thenReturn(1l);
+        when(this.userService.getById(anyLong())).thenReturn(existingUser);
+        when(this.jwtService.isTokenValid(anyString(), any(User.class))).thenReturn(true);
+
+        this.mockMvc.perform(
+            post("/events")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonEvent)
+                .cookie(new MockCookie("jwt", "testJWT"))
+        ).andExpect(status().isCreated())
+        .andExpect(jsonPath("name").value("Created event"))
+        .andExpect(jsonPath("startDate").exists())
+        .andExpect(jsonPath("endDate").exists());
     }
 }

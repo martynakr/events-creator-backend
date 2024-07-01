@@ -137,6 +137,8 @@ Coming soon
 
 to SecurityConfig class
 
+-   **! July 2024** - added controller tests for `EventController` class. Set up Github Actions workflow to run tests on push to any branch.
+
 ## Known issues
 
 -   Because the JWT is sent as a cookie, the whole full stack application is vulnerable to CSRF attacks. A potential solution to this could be using the Signed Double-Submit Cookie Pattern
@@ -145,7 +147,6 @@ to SecurityConfig class
 ## Next steps
 
 -   Add logic to ensure only unique colours for labels get generated
--   Adding tests using Mocktio
 -   Setting up automated tests on push to branches with Github Actions
 -   Deploying the backend on Render as per [instructions I created earlier](https://github.com/martynakr/spring-boot-postgres-render-deployment)
 -   Setting up continuous deployment
