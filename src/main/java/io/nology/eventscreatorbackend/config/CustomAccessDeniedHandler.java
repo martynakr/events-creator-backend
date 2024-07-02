@@ -11,6 +11,6 @@ import jakarta.servlet.http.HttpServletResponse;
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException exception) {
-    
+        System.out.println(response + "RESPONSE CLASS ACCESS DENIED ");
     }
 }

@@ -49,13 +49,23 @@ public class EventControllerTest {
     private UserService userService;
 
     @Test
+    void shouldRejectGettingEventWhenNotLoggedIn() throws Exception {
+
+
+        this.mockMvc.perform(
+            get("/events")
+            .with(csrf())
+        ).andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void shouldRejectCreatingEventWhenNotLoggedIn() throws Exception {
 
         String jsonEvent = "{"
-            + "\\\"name\\\": \\\"New event\\\","
-            + "\\\"startDate\\\": \\\"2024-07-01T10:00:00\\\","
-            + "\\\"endDate\\\": \\\"2024-07-01T12:00:00\\\","
-            + "\\\"labels\\\": []"
+            + "\"name\": \"Created event\","
+            + "\"startDate\": \"2024-07-01T10:00:00\","
+            + "\"endDate\": \"2024-07-01T12:00:00\","
+            + "\"labels\": []"
             + "}";
 
         this.mockMvc.perform(
