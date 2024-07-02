@@ -47,7 +47,6 @@ public class AuthService {
 	
 	public AuthResponse login(AuthLoginDTO data) {
 		
-		
 		UsernamePasswordAuthenticationToken tok =  new UsernamePasswordAuthenticationToken(
 	            data.getEmail(),
 	            data.getPassword()

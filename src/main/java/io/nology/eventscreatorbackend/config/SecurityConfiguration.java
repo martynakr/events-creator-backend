@@ -28,7 +28,7 @@ public class SecurityConfiguration {
 	private final CustomAuthEntryPoint customAuthEntryPoint;
 	private final CorsConfigurationSource corsConfigurationSource;
 	private final CustomAccessDeniedHandler accessDeniedHandler;
-	//private final CsrfCookieFilter csrfCookieFilter;
+	private final CsrfCookieFilter csrfCookieFilter;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -37,7 +37,7 @@ public class SecurityConfiguration {
 
 		CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
 
-		requestHandler.setCsrfRequestAttributeName("_csrf");
+		requestHandler.setCsrfRequestAttributeName(null);
 
 		http
 		.csrf((csrf) -> csrf
@@ -60,13 +60,13 @@ public class SecurityConfiguration {
 	                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 	     )
 		.exceptionHandling(exceptionHandling -> exceptionHandling
-					.accessDeniedHandler(accessDeniedHandler)
+					//.accessDeniedHandler(accessDeniedHandler)
 					.authenticationEntryPoint(customAuthEntryPoint) 
 				)
 		.authenticationProvider(authenticationProvider)
-		.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-		//.addFilterAfter(
-		//	csrfCookieFilter, BasicAuthenticationFilter.class);
+		.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+		.addFilterAfter(
+			csrfCookieFilter, BasicAuthenticationFilter.class);
         
 		return http.build();
 	}

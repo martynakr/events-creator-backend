@@ -25,15 +25,15 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<String>(ex.getMessage(), HttpStatus.NOT_FOUND);
 	}
 	
-	// @ExceptionHandler(BadCredentialsException.class)
-	// public ResponseEntity<String> handleBadCredentials(BadCredentialsException ex) {
-	// 	return new ResponseEntity<String>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
-	// }
+	@ExceptionHandler(BadCredentialsException.class)
+	public ResponseEntity<String> handleBadCredentials(BadCredentialsException ex) {
+		return new ResponseEntity<String>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+	}
 	
-	// @ExceptionHandler(ExpiredJwtException.class)
-	// public ResponseEntity<String> handleExpiredToken(ExpiredJwtException ex) {
-	// 	return new ResponseEntity<String>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
-	// }
+	@ExceptionHandler(ExpiredJwtException.class)
+	public ResponseEntity<String> handleExpiredToken(ExpiredJwtException ex) {
+		return new ResponseEntity<String>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+	}
 	
 	@ExceptionHandler(DateTimeParseException.class)
 	public ResponseEntity<String> handleIncorrectDate(DateTimeParseException ex) {
@@ -42,13 +42,13 @@ public class GlobalExceptionHandler {
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public Map<String, Object> handleInvalidData(MethodArgumentNotValidException ex) {
+	public ResponseEntity<Map<String, Object>> handleInvalidData(MethodArgumentNotValidException ex) {
 		Map<String, Object> errorMap = new HashMap<>();
 		errorMap.put("timestamp", LocalDateTime.now());
 	    errorMap.put("status", HttpStatus.BAD_REQUEST.value());
 	    errorMap.put("error", "Bad Request");
         errorMap.put("message", ex.getMessage());
-        return errorMap;
+        return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
 	}
 	
 	//JSONParseError
