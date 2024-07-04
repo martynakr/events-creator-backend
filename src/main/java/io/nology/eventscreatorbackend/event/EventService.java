@@ -44,20 +44,20 @@ public class EventService {
 				.labels(new ArrayList<Label>())
 				.build();
 		
-		// if(data.getLabels() != null ) {
-		// 	data.getLabels().forEach(l -> {
-		// 		Optional<EventLabel> maybeLabel = this.labelService.findByName(l.getName());
-		// 		if(maybeLabel.isPresent()) {
-		// 			newEvent.getLabels().add(maybeLabel.get());
-		// 		} else {
-		// 			EventLabel newLabel = this.labelService.create(l);
-		// 			newEvent.getLabels().add(newLabel);
-		// 		}
+		if(data.getLabels() != null ) {
+			data.getLabels().forEach(l -> {
+				Optional<Label> maybeLabel = this.labelService.findByName(l.getName());
+				if(maybeLabel.isPresent()) {
+					newEvent.getLabels().add(maybeLabel.get());
+				} else {
+					Label newLabel = this.labelService.create(l);
+					newEvent.getLabels().add(newLabel);
+				}
 				
-		// 	}
-		//   );
+			}
+		  );
 			
-		// }
+		}
 		return this.repository.save(newEvent);
 	}
 	
@@ -81,5 +81,17 @@ public class EventService {
 		return this.repository.save(existingEvent);
 		
 	}
+
+    public void delete(Long id) {
+		User loggedInUser = this.authService.getCurrentUser();
+        Optional<Event> foundEvent = this.repository.findByIdAndUserId(id, loggedInUser.getId());
+
+		if(foundEvent.isEmpty()) {
+			throw new NotFoundException("Event with id: " + id + " not found");
+		}
+
+		this.repository.delete(foundEvent.get());
+		
+    }
 
 }
