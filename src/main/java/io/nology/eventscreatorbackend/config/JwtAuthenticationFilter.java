@@ -2,12 +2,15 @@ package io.nology.eventscreatorbackend.config;
 
 import java.io.IOException;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import io.nology.eventscreatorbackend.exceptions.NotFoundException;
 import io.nology.eventscreatorbackend.user.User;
 import io.nology.eventscreatorbackend.user.UserService;
 
@@ -39,13 +42,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 			// change to array of strings to allow swagger as well
 		
-			if (requestURI.equals("/auth/login") || requestURI.equals("/auth/register")) {
+			if (requestURI.equals("/auth/login") || requestURI.equals("/auth/register") || requestURI.equals("/auth/token")) {
         	filterChain.doFilter(request, response);
         		return;
     		}
 			
 			final String jwt = this.getCookieValue(request, "jwt");
-			System.out.println(jwt + " JWT FROM FILTER");
 			final Long userId;
 
 			
@@ -54,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			// 	return;
 			// }
 			// jwt = authHeader.substring(7);
-			if (jwt == null) {
+			if (jwt == null || jwt == "") {
             	filterChain.doFilter(request, response);
             	return;
         	}
@@ -85,7 +87,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			filterChain.doFilter(request, response);
 	}
 
-	 public String getCookieValue(HttpServletRequest request, String cookieName) {
+	private String getCookieValue(HttpServletRequest request, String cookieName) {
         Cookie[] cookies = request.getCookies();
 		System.out.println(cookies != null);
         if (cookies != null) {

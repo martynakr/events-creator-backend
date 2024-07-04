@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<String> handleIncorrectDate(DateTimeParseException ex) {
 		return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Map<String, Object>> handleInvalidData(MethodArgumentNotValidException ex) {
